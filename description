@@ -1,0 +1,34 @@
+git push -> main -> github actions -> (docker-compose -> testy) -> deploy
+image database on docker hubie -> git pull -> docker-hub pull -> docker-compose up
+
+Database structure:
+- Author
+    - id
+    - name
+    - surname
+
+- Song
+    - songId
+    - embeddingId
+    - clusterId
+    - songName
+    - songReleaseDate
+    - songDuration
+    - songPopularity
+    - songDownloadLink
+    - songLyrics
+
+- Embedding
+    - embeddingId
+    - embeddingVector
+
+- SimilarityCluster
+    - TO DO
+
+- SongAuthorRelation M:N
+    - songId
+    - authorId
+
+- RelatedAuthorsRelation
+    - authorId1
+    - authorId2

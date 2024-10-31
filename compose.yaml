@@ -1,0 +1,13 @@
+services:
+  windy-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: melody-app
+    volumes:
+      - ./:/app
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    working_dir: /app
+    command: python main.py
