@@ -1,4 +1,4 @@
-from src.dataHandlers.DbHandlerAbstract import DbHandlerAbstract
+from src.databaseHandlers.DbHandlerAbstract import DbHandlerAbstract
 
 
 class DbSimClusterHandler(DbHandlerAbstract):

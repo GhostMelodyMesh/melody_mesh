@@ -1,8 +1,8 @@
-from src.dataHandlers.DbHandlerAbstract import DbHandlerAbstract
+from src.databaseHandlers.DbHandlerAbstract import DbHandlerAbstract
 
 
-class DbAuthorHandler(DbHandlerAbstract):
-    """ Handling of author data - authorId, authorName, authorCountry """
+class DbEmbeddingHandler(DbHandlerAbstract):
+    """ Handling of embedding data - embeddingId, embeddingVector """
 
     def __init__(self):
         super().__init__()

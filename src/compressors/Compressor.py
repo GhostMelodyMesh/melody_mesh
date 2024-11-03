@@ -1,7 +1,7 @@
 from src.compressors.CompressorAbstract import CompressorAbstract
 
 
-class Compressor(CompressorAbstract):
+class CompressorTeamName(CompressorAbstract):
     def compress(self, file_path):
         pass
 
