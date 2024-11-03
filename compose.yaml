@@ -1,5 +1,5 @@
 services:
-  windy-app:
+  melody-app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,4 +10,4 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
     working_dir: /app
-    command: python main.py
+    command: python src/main.py
