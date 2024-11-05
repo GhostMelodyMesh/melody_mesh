@@ -3,24 +3,30 @@ from abc import ABC, abstractmethod
 class Audio(ABC):
     """ Abstract class for audio data """
     def __init__(self):
-        pass
-
-    @abstractmethod
-    def get_audio(self):
-        """ Return the audio data """
-        pass
-
-    @abstractmethod
-    def get_format(self) -> str:
-        """ Return the format of the audio data """
-        pass
-
-    @abstractmethod
-    def set_audio(self, audio: str):
-        """ Set the audio data """
-        pass
-
-    @abstractmethod
-    def set_format(self, format: str):
-        """ Set the format of the audio data """
-        pass
+        self._audio = None
+        self._format = None
+        self._sample_rate: int = None
+    
+    @property
+    def audio(self):
+        return self._audio
+    
+    @audio.setter
+    def audio(self, audio):
+        self._audio = audio
+    
+    @property
+    def format(self):
+        return self._format
+    
+    @format.setter
+    def format(self, format):
+        self._format = format
+        
+    @property
+    def sample_rate(self):
+        return self._sample_rate
+    
+    @sample_rate.setter
+    def sample_rate(self, sample_rate):
+        self._sample_rate = sample_rate

@@ -1,26 +1,16 @@
 import numpy as np
-from dataTypes import Audio
+from src.dataTypes.Audio import Audio
 
 
 class AudioWAV(Audio):
     def __init__(self):
         super().__init__()
-        pass
+        self._sample_rate: int = None
+        
+    @property
+    def sample_rate(self):
+        return self._sample_rate
     
-    # TODO: define attributes
-    
-    def get_audio(self) -> np.ndarray:
-        """ Return the audio data """
-        pass
-
-    def get_format(self) -> str:
-        """ Return the format of the audio data """
-        pass
-
-    def set_audio(self, audio: str):
-        """ Set the audio data """
-        pass
-
-    def set_format(self, format: str):
-        """ Set the format of the audio data """
-        pass
+    @sample_rate.setter
+    def sample_rate(self, sample_rate):
+        self._sample_rate = sample_rate
