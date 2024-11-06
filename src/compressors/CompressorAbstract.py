@@ -32,6 +32,6 @@ class CompressorAbstract(ABC):
         pass
 
     @abstractmethod
-    def lower_quality(self, file: Audio, sample_rate: int) -> Audio:
+    def lower_quality(self, file: Audio, new_sample_rate: int) -> Audio:
         """ Lower the quality of an audio file """
         pass

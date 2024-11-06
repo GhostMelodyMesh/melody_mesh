@@ -3,10 +3,10 @@ from abc import ABC, abstractmethod
 
 class Audio(ABC):
     """ Abstract class for audio data """
-    def __init__(self):
-        self._audio = None
-        self._format = None
-        self._sample_rate: int = None
+    def __init__(self, audio=None, format=None, sample_rate=None):
+        self._audio = audio
+        self._format: str = format
+        self._sample_rate: int = sample_rate
     
     @property
     def audio(self):
