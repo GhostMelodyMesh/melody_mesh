@@ -20,12 +20,10 @@ class AudioFileHandler(FileHandlerAbstract):
         temp_path = audioFileConverter.convert_to_wav(file_path)
         
         sample_rate, audio = wavfile.read(temp_path)
+        n_samples, n_channels = audio.shape
         os.remove(temp_path)
         
-        audioWAV = AudioWAV()
-        audioWAV.audio = audio
-        audioWAV.format = 'wav'
-        audioWAV.sample_rate = sample_rate
+        audioWAV = AudioWAV(audio=audio, format='wav', sample_rate=sample_rate, n_samples=n_samples, n_channels=n_channels)
         
         return audioWAV
         

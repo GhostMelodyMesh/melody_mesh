@@ -4,14 +4,24 @@ from src.dataTypes.Audio import Audio
 
 
 class AudioWAV(Audio):
-    def __init__(self):
+    def __init__(self, n_samples: int, n_channels: int):
         super().__init__()
-        self._sample_rate: Union[int, None] = None
+        self._n_samples = n_samples
+        self._n_channels = n_channels
         
     @property
-    def sample_rate(self):
-        return self._sample_rate
+    def n_samples(self):
+        return self._n_samples
     
-    @sample_rate.setter
-    def sample_rate(self, sample_rate):
-        self._sample_rate = sample_rate
+    @n_samples.setter
+    def n_samples(self, n_samples):
+        self._n_samples = n_samples
+        
+    @property
+    def n_channels(self):
+        return self._n_channels
+    
+    @n_channels.setter
+    def n_channels(self, n_channels):
+        self._n_channels = n_channels
+        
