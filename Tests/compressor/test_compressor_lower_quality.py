@@ -117,3 +117,16 @@ def test_lower_quality_cascading(compressor, compressed_files, compression_stage
         expected_length = len(original.audio) / total_compression_rate
         assert len(compressed.audio) == pytest.approx(expected_length, abs=length_tolerance), \
             f"Unexpected length after cascading compression to {compression_stages}, got {len(compressed.audio)}, expected {expected_length} +- {length_tolerance}"
+
+
+@pytest.mark.parametrize('invalid_sample_rate', [0, -44100, -1, 100000])
+def test_lower_quality_invalid_sample_rate(compressor, sample_test_files, audio_file_handler, invalid_sample_rate):
+    """Test handling of invalid sample rates"""
+    filepath = f'./{PATH}/{sample_test_files[0]}.wav'
+    audio = audio_file_handler.read_as_wav(filepath)
+
+    with pytest.raises(ValueError):
+        compressor.lower_quality(audio, invalid_sample_rate)
+
+
+# TODO zrobić printowanie na ile dobra jest kompresja, zapytać claude jak to zrobić.
