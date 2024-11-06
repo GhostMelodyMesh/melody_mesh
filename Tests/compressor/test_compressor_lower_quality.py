@@ -61,3 +61,18 @@ def helper_values_range(original_audio, compressed_audio, sample_rate, rms_toler
     assert abs(
         original_rms - compressed_rms) < rms_tolerance, \
         f"RMS value changed significantly after compression to {sample_rate}Hz, original: {original_rms}, compressed: {compressed_rms}"
+
+
+def test_lower_quality_properties(compressed_files):
+    """Test if sample rate is correct and length is scaled properly after compression"""
+    for file, data in compressed_files.items():
+        original = data['original']
+        for sample_rate in data['compressed']:
+            compressed = data['compressed'][sample_rate]
+
+            compression_rate = original.sample_rate / sample_rate
+
+            assert compressed.sample_rate == sample_rate, f"Incorrect sample rate after compression to {sample_rate}Hz, current: {compressed.sample_rate}"
+            assert len(compressed.audio) == pytest.approx(len(original.audio) / compression_rate, abs=5), \
+                f"Incorrect length after compression to {sample_rate}Hz, current: {len(compressed.audio)}"
+
