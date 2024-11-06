@@ -92,3 +92,28 @@ def test_lower_quality_values_range(compressor, compressed_files, sample_rate, r
         original = data['original']
         compressed = data['compressed'][sample_rate]
         helper_values_range(original.audio, compressed.audio, sample_rate, rms_tolerance)
+
+
+@pytest.mark.parametrize('compression_stages, rms_tolerance, length_tolerance', [
+    ([22050, 11025], [0.05, 0.08], 10),  # 2-step compression
+    ([22050, 11025, 8000], [0.05, 0.08, 0.1], 15),  # 3-step compression
+    ([22050, 11025, 8000, 4000], [0.05, 0.08, 0.1, 0.15], 20)  # 4-step compression
+])
+def test_lower_quality_cascading(compressor, compressed_files, compression_stages, rms_tolerance, length_tolerance):
+    """Test cascading compression (multiple quality reductions)"""
+    for file, data in compressed_files.items():
+        original = data['original']
+
+        compressed = original
+        total_compression_rate = 1
+
+        for rate, rms in zip(compression_stages, rms_tolerance):
+            compressed = compressor.lower_quality(compressed, rate)
+            assert compressed.sample_rate == rate, f"Incorrect sample rate after compression to {rate}Hz"
+            helper_values_range(original.audio, compressed.audio, rate, rms)
+            total_compression_rate *= (original.sample_rate / rate)
+
+        # Check if final length is within tolerance
+        expected_length = len(original.audio) / total_compression_rate
+        assert len(compressed.audio) == pytest.approx(expected_length, abs=length_tolerance), \
+            f"Unexpected length after cascading compression to {compression_stages}, got {len(compressed.audio)}, expected {expected_length} +- {length_tolerance}"
