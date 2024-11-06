@@ -76,3 +76,19 @@ def test_lower_quality_properties(compressed_files):
             assert len(compressed.audio) == pytest.approx(len(original.audio) / compression_rate, abs=5), \
                 f"Incorrect length after compression to {sample_rate}Hz, current: {len(compressed.audio)}"
 
+
+@pytest.mark.parametrize('sample_rate,rms_tolerance', [
+    # (sample_rate, rms_tolerance)
+    (22050, 0.05),
+    (11025, 0.08),
+    (8000, 0.1),
+    (4000, 0.15),
+    (2400, 0.2),
+    (1200, 0.3)
+])
+def test_lower_quality_values_range(compressor, compressed_files, sample_rate, rms_tolerance):
+    """Test if audio values stay in correct range after compression"""
+    for file, data in compressed_files.items():
+        original = data['original']
+        compressed = data['compressed'][sample_rate]
+        helper_values_range(original.audio, compressed.audio, sample_rate, rms_tolerance)
