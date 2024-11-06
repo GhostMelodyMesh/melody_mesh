@@ -1,7 +1,6 @@
 import os
-import re
-from dataTypes.Audio import Audio
-from dataTypes.AudioWAV import AudioWAV
+from src.dataTypes.Audio import Audio
+from src.dataTypes.AudioWAV import AudioWAV
 from src.fileHandlers.AudioFileConverter import AudioFileConverter
 from src.fileHandlers.FileHandlerAbstract import FileHandlerAbstract
 from scipy.io import wavfile

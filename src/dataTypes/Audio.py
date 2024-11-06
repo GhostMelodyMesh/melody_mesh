@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class Audio(ABC):
     """ Abstract class for audio data """
     def __init__(self):

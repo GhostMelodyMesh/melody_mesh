@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataTypes.Audio import Audio
+from src.dataTypes.Audio import Audio
 
 
 class CompressorAbstract(ABC):

@@ -1,3 +1,4 @@
+from typing import Union
 import numpy as np
 from src.dataTypes.Audio import Audio
 
@@ -5,7 +6,7 @@ from src.dataTypes.Audio import Audio
 class AudioWAV(Audio):
     def __init__(self):
         super().__init__()
-        self._sample_rate: int = None
+        self._sample_rate: Union[int, None] = None
         
     @property
     def sample_rate(self):
