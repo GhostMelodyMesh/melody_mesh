@@ -49,3 +49,15 @@ def compressed_files(compressor, sample_test_files, audio_file_handler) -> dict[
             result[file_name]['compressed'][sample_rate] = compressed_audio
 
     return result
+
+
+def helper_values_range(original_audio, compressed_audio, sample_rate, rms_tolerance):
+    assert np.all(compressed_audio >= -1.0), f"Compressed audio contains values below -1.0 for sample_rate {sample_rate}"
+    assert np.all(compressed_audio <= 1.0), f"Compressed audio contains values above 1.0 for sample_rate {sample_rate}"
+
+    # Test if RMS value is within tolerance
+    original_rms = np.sqrt(np.mean(np.square(original_audio)))
+    compressed_rms = np.sqrt(np.mean(np.square(compressed_audio)))
+    assert abs(
+        original_rms - compressed_rms) < rms_tolerance, \
+        f"RMS value changed significantly after compression to {sample_rate}Hz, original: {original_rms}, compressed: {compressed_rms}"
