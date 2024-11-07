@@ -1,6 +1,12 @@
 import pytest
+from src.fileHandlers.AudioFileHandler import AudioFileHandler
 
 
-@pytest.fixture
-def get_sample_test_files():
-    return ["test1", "test2", "test3"]
+@pytest.fixture(scope='session')
+def sample_test_files_path():
+    return ["./rawData/file0.mp3", "./rawData/file1.wav", "./rawData/file2.wav", "./rawData/file3.wav", "./rawData/file4.wav"]
+
+
+@pytest.fixture(scope='session')
+def audio_file_handler():
+    return AudioFileHandler()
