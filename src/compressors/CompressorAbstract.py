@@ -8,7 +8,7 @@ class CompressorAbstract(ABC):
 
     @abstractmethod
     def compress(self, file_path: str) -> str:
-        """ Remove redundant parts from an audio file, lower its quality and save the compressed file to compressedData, returns the path to the compressed file """
+        """ Remove redundant parts from an audio file, lower its quality and save the compressed file to compressedAudio, returns the path to the compressed file """
         # fHandler = AudioFileHandler()
         # file, format = fHandler.read(file_path)
         # compressed_file = self.lower_quality(compressed_file)

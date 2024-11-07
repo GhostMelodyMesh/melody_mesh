@@ -9,5 +9,6 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
     working_dir: /app
     command: python src/main.py
