@@ -1,7 +1,7 @@
 import pytest
-from src.compressors.CompressorWAVTeamName import CompressorWAVTeamName
+from src.compressors.CompressorWAVBaseline import CompressorWAVBaseline
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def compressor():
-    return CompressorWAVTeamName()
+    return CompressorWAVBaseline()

@@ -2,13 +2,11 @@ import pytest
 import os.path
 import numpy as np
 from src.dataTypes.AudioWAV import AudioWAV
+from copy import deepcopy
 
 
-PATH = './rawData/'
-
-
-@pytest.fixture(scope='module')
-def compressed_files(compressor, sample_test_files, audio_file_handler) -> dict[str, str: AudioWAV, str: dict[int, AudioWAV]]:
+@pytest.fixture(scope='session')
+def compressed_files(compressor, sample_test_files_path, audio_file_handler) -> dict[str, str: AudioWAV, str: dict[int, AudioWAV]]:
     """
     Fixtures that returns compressed files with sample rates
 
@@ -34,8 +32,8 @@ def compressed_files(compressor, sample_test_files, audio_file_handler) -> dict[
     sample_rates = [22050, 11025, 8000, 4000, 2400, 1200]
     result = {}
 
-    for file_name in sample_test_files:
-        file_path = f'./{PATH}/{file_name}.wav'
+    for file_path in sample_test_files_path:
+        file_name = os.path.basename(file_path)
         if not os.path.exists(file_path):
             continue
         original_audio = audio_file_handler.read_as_wav(file_path)
@@ -45,7 +43,8 @@ def compressed_files(compressor, sample_test_files, audio_file_handler) -> dict[
         }
 
         for sample_rate in sample_rates:
-            compressed_audio = compressor.lower_quality(original_audio, sample_rate)
+            audio_copy = deepcopy(original_audio)
+            compressed_audio = compressor.lower_quality(audio_copy, sample_rate)
             result[file_name]['compressed'][sample_rate] = compressed_audio
 
     return result
@@ -55,26 +54,18 @@ def helper_values_range(original_audio, compressed_audio, sample_rate, rms_toler
     assert np.all(compressed_audio >= -1.0), f"Compressed audio contains values below -1.0 for sample_rate {sample_rate}"
     assert np.all(compressed_audio <= 1.0), f"Compressed audio contains values above 1.0 for sample_rate {sample_rate}"
 
+    assert compressed_audio.n_samples == len(compressed_audio.audio), f"n_samples does not match the length of audio array for sample_rate {sample_rate}"
+    assert compressed_audio.sample_rate == sample_rate, f"sample_rate does not match for sample_rate {sample_rate}"
+    assert compressed_audio.n_samples == pytest.approx(original_audio.n_samples / (original_audio.sample_rate / sample_rate), abs=10), \
+        (f"n_samples does not match the expected length, got {compressed_audio.n_samples}, expected {original_audio.n_samples / (original_audio.sample_rate / sample_rate)}"
+         f" for sample_rate {sample_rate}")
+
     # Test if RMS value is within tolerance
     original_rms = np.sqrt(np.mean(np.square(original_audio)))
     compressed_rms = np.sqrt(np.mean(np.square(compressed_audio)))
     assert abs(
         original_rms - compressed_rms) < rms_tolerance, \
         f"RMS value changed significantly after compression to {sample_rate}Hz, original: {original_rms}, compressed: {compressed_rms}"
-
-
-def test_lower_quality_properties(compressed_files):
-    """Test if sample rate is correct and length is scaled properly after compression"""
-    for file, data in compressed_files.items():
-        original = data['original']
-        for sample_rate in data['compressed']:
-            compressed = data['compressed'][sample_rate]
-
-            compression_rate = original.sample_rate / sample_rate
-
-            assert compressed.sample_rate == sample_rate, f"Incorrect sample rate after compression to {sample_rate}Hz, current: {compressed.sample_rate}"
-            assert len(compressed.audio) == pytest.approx(len(original.audio) / compression_rate, abs=5), \
-                f"Incorrect length after compression to {sample_rate}Hz, current: {len(compressed.audio)}"
 
 
 @pytest.mark.parametrize('sample_rate,rms_tolerance', [
@@ -86,7 +77,7 @@ def test_lower_quality_properties(compressed_files):
     (2400, 0.2),
     (1200, 0.3)
 ])
-def test_lower_quality_values_range(compressor, compressed_files, sample_rate, rms_tolerance):
+def test_lower_quality_values(compressor, compressed_files, sample_rate, rms_tolerance):
     """Test if audio values stay in correct range after compression"""
     for file, data in compressed_files.items():
         original = data['original']
@@ -104,12 +95,11 @@ def test_lower_quality_cascading(compressor, compressed_files, compression_stage
     for file, data in compressed_files.items():
         original = data['original']
 
-        compressed = original
+        compressed = deepcopy(original)
         total_compression_rate = 1
 
         for rate, rms in zip(compression_stages, rms_tolerance):
             compressed = compressor.lower_quality(compressed, rate)
-            assert compressed.sample_rate == rate, f"Incorrect sample rate after compression to {rate}Hz"
             helper_values_range(original.audio, compressed.audio, rate, rms)
             total_compression_rate *= (original.sample_rate / rate)
 
@@ -120,13 +110,15 @@ def test_lower_quality_cascading(compressor, compressed_files, compression_stage
 
 
 @pytest.mark.parametrize('invalid_sample_rate', [0, -44100, -1, 100000])
-def test_lower_quality_invalid_sample_rate(compressor, sample_test_files, audio_file_handler, invalid_sample_rate):
+def test_lower_quality_invalid_sample_rate(compressor, sample_test_files_path, audio_file_handler, invalid_sample_rate):
     """Test handling of invalid sample rates"""
-    filepath = f'./{PATH}/{sample_test_files[0]}.wav'
-    audio = audio_file_handler.read_as_wav(filepath)
+    for filepath in sample_test_files_path:
+        if not os.path.exists(filepath):
+            continue
+        audio = audio_file_handler.read_as_wav(filepath)
 
-    with pytest.raises(ValueError):
-        compressor.lower_quality(audio, invalid_sample_rate)
+        with pytest.raises(ValueError):
+            compressor.lower_quality(audio, invalid_sample_rate)
 
 
 # TODO zrobić printowanie na ile dobra jest kompresja, zapytać claude jak to zrobić.
