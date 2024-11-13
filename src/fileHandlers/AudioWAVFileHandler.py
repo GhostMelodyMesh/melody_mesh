@@ -36,8 +36,9 @@ class AudioWAVFileHandler(FileHandlerAbstract):
 
     def write(self, audio: AudioWAV, file_path: str):
         """ Write an Audio object to a file, file_path must include the file extension """
-        match file_path.split(".")[-1]:
+        match self._get_extension(file_path):
             case "wav":
                 wavfile.write(file_path, audio.sample_rate, audio.audio)
             case _:
                 raise ValueError("File format not supported")
+            
