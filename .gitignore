@@ -1,3 +1,4 @@
 /rawAudio/*
 /compressedAudio/*
 **/__pycache__/*
+.idea

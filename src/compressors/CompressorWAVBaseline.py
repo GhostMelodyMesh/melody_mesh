@@ -1,11 +1,10 @@
 import numpy as np
 import scipy.signal
-from src.compressors.CompressorAbstract import CompressorAbstract
 from src.dataTypes.AudioWAV import AudioWAV
 from src.fileHandlers.AudioFileHandler import AudioFileHandler
 
 
-class CompressorWAVBaseline(CompressorAbstract):
+class CompressorWAVBaseline:
     """ Warning: This compressor is not efficient and is only used as an example, it could be improved in many ways (including optimization) """
     def compress(self, file_path: str) -> str:
         file_handler = AudioFileHandler()
