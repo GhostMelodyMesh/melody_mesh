@@ -13,7 +13,7 @@ class AudioFileHandler(FileHandlerAbstract):
         pass
 
     def read(self, file_path: str) -> Audio:
-
+        """ Read an audio file from a file path, file_path must include the file extension """
         if not os.path.exists(file_path):
             raise FileNotFoundError("File not found")
 
