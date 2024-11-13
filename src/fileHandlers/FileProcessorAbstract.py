@@ -5,7 +5,7 @@ import re
 T = TypeVar('T')
 
 
-class FileHandlerAbstract(ABC, Generic[T]):
+class FileProcessorAbstract(ABC, Generic[T]):
     @abstractmethod
     def __init__(self):
         pass
@@ -17,8 +17,3 @@ class FileHandlerAbstract(ABC, Generic[T]):
     @abstractmethod
     def write(self, obj: T, file_path: str):
         pass
-
-    @staticmethod
-    def _get_extension(file_path: str) -> str:
-        extension = re.search(r'\.(\w+)$', file_path).group(1)
-        return extension

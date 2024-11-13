@@ -1,10 +1,11 @@
 from src.dataTypes.AudioWAV import AudioWAV
-from src.fileHandlers.FileHandlerAbstract import FileHandlerAbstract
+from src.fileHandlers.FileProcessorAbstract import FileProcessorAbstract
 from scipy.io import wavfile
 import numpy as np
+from src.utilities.get_extension import get_extension
 
 
-class AudioWAVFileHandler(FileHandlerAbstract):
+class AudioWAVFileProcessor(FileProcessorAbstract):
     def __init__(self):
         pass
 
@@ -36,7 +37,7 @@ class AudioWAVFileHandler(FileHandlerAbstract):
 
     def write(self, audio: AudioWAV, file_path: str):
         """ Write an Audio object to a file, file_path must include the file extension """
-        match self._get_extension(file_path):
+        match get_extension(file_path):
             case "wav":
                 wavfile.write(file_path, audio.sample_rate, audio.audio)
             case _:

@@ -1,5 +1,5 @@
 from compressors.CompressorWAVBaseline import CompressorWAVBaseline
-from src.fileHandlers.AudioFileHandler import AudioFileHandler
+from src.fileHandlers.AudioFileHandler import AudioFileProcessor
 
 
 print("Hello World!")
