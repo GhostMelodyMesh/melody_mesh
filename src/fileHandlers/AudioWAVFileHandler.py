@@ -1,6 +1,4 @@
-import os
 from src.dataTypes.AudioWAV import AudioWAV
-from src.fileHandlers.AudioFileConverter import AudioFileConverter
 from src.fileHandlers.FileHandlerAbstract import FileHandlerAbstract
 from scipy.io import wavfile
 import numpy as np
@@ -12,11 +10,7 @@ class AudioWAVFileHandler(FileHandlerAbstract):
 
     def read(self, file_path: str):
         """ Read an audio file as a .wav file with normalised audio data in range (-1, 1) of type float32 """
-
-        audio_file_converter = AudioFileConverter()
-        temp_path = audio_file_converter.convert_to_wav(file_path)
-
-        sample_rate, audio = wavfile.read(temp_path)
+        sample_rate, audio = wavfile.read(file_path)
         data_number_type = audio.dtype
 
         match data_number_type:
@@ -34,7 +28,6 @@ class AudioWAVFileHandler(FileHandlerAbstract):
         audio = audio.astype(np.float32)
 
         n_samples, n_channels = audio.shape
-        os.remove(temp_path)
 
         audioWAV = AudioWAV(audio=audio, format='wav', sample_rate=sample_rate, n_samples=n_samples,
                             n_channels=n_channels)
