@@ -1,0 +1,3 @@
+Naming conventions:
+- We use snake case (example: variable_name, function_name) for almost everything
+- For class names we use pascal case (example: ClassName)
