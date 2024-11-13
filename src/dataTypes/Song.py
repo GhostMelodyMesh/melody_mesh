@@ -1,7 +1,7 @@
 class Song:
     def __init__(self):
-        lyrics = self.getText()
+        lyrics = self.get_text()
 
-    def getText(self):
+    def get_text(self):
         # get lyrics from db, if empty, extract text and save in db
         ...

@@ -84,7 +84,7 @@ class CompressorWAVBaseline(CompressorAbstract):
                 offset = 0
                 while offset < len(audio_copy) - seg_len:
                     segment = audio_copy[offset:offset + seg_len]
-                    similarity = self.NCC(segment, first_sample)
+                    similarity = self.ncc(segment, first_sample)
                     similarities.append(similarity)
                     offset += precision
                 best_match_index = np.argmax(similarities)
@@ -103,7 +103,7 @@ class CompressorWAVBaseline(CompressorAbstract):
                     offset = left
                     while offset < right:
                         segment = audio_copy[offset:offset + seg_len]
-                        similarity = self.NCC(segment, first_sample)
+                        similarity = self.ncc(segment, first_sample)
                         similarities.append(similarity)
                         offset += precision
                     best_match_index = np.argmax(similarities)
@@ -151,7 +151,7 @@ class CompressorWAVBaseline(CompressorAbstract):
         audio_wav.n_channels = 1
         return audio_wav
     
-    def NCC(self, x: np.ndarray, y: np.ndarray) -> float:
+    def ncc(self, x: np.ndarray, y: np.ndarray) -> float:
         """ Normalised cross-correlation """
         if x.shape != y.shape:
             raise ValueError("The two signals must have the same length")
