@@ -17,6 +17,7 @@ class AudioFileHandler:
 
     @staticmethod
     def delete_temp_file(file_path: str):
+        """ Delete a temporary file if it ends with 'temp.<extension>' """
         if re.search(r'temp\.\w+$', file_path):
             os.remove(file_path)
 
