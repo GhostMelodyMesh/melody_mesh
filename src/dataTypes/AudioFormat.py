@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class AudioType(Enum):
+class AudioFormat(Enum):
     MP3 = "mp3"
     WAV = "wav"
     MIDI = "midi"
@@ -13,7 +13,7 @@ class AudioType(Enum):
         return f"AudioType.{self.name}"
 
     def __eq__(self, other):
-        if isinstance(other, AudioType):
+        if isinstance(other, AudioFormat):
             return self.value == other.value
         elif isinstance(other, str):
             return self.value == other
