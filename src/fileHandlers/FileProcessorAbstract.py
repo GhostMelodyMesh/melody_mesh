@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic
-import re
 
 T = TypeVar('T')
 
