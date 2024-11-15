@@ -1,5 +1,5 @@
 import pytest
-from src.fileHandlers.AudioFileHandler import AudioFileHandler
+from src.fileHandlers.AudioFileHandler import AudioFileProcessor
 
 
 @pytest.fixture(scope='session')
@@ -9,4 +9,4 @@ def sample_test_files_path():
 
 @pytest.fixture(scope='session')
 def audio_file_handler():
-    return AudioFileHandler()
+    return AudioFileProcessor()
