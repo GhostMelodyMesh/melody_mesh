@@ -1,13 +1,13 @@
 import numpy as np
 import scipy.signal
 from src.dataTypes.AudioWAV import AudioWAV
-from src.fileHandlers.AudioFileHandler import AudioFileHandler
+from src.fileHandlers.AudioFileHandler import AudioFileProcessor
 
 
 class CompressorWAVBaseline:
     """ Warning: This compressor is not efficient and is only used as an example, it could be improved in many ways (including optimization) """
     def compress(self, file_path: str) -> str:
-        file_handler = AudioFileHandler()
+        file_handler = AudioFileProcessor()
         audio_wav = file_handler.read_as_wav(file_path)
         audio_wav = self.convert_to_mono(audio_wav)
         audio_wav = self.lower_quality(audio_wav, 4410)

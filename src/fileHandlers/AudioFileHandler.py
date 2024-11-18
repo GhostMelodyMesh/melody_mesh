@@ -1,53 +1,53 @@
 import os
+import re
 from src.dataTypes.Audio import Audio
 from src.dataTypes.AudioWAV import AudioWAV
+from src.fileHandlers.AudioWAVFileProcessor import AudioWAVFileProcessor
+from src.utilities.get_extension import get_extension
+from src.dataTypes.AudioFormat import AudioFormat
 from src.fileHandlers.AudioFileConverter import AudioFileConverter
-from src.fileHandlers.FileHandlerAbstract import FileHandlerAbstract
-from scipy.io import wavfile
-import numpy as np
+from typing import Union
 
 
-class AudioFileHandler(FileHandlerAbstract):
-    """" Handling of local audio files, reading different file formats, converting them into normalised format, saving them """
+class AudioFileHandler:
+    """ Handling of local audio files, reading different file formats, converting them into normalised format, saving them """
 
     def __init__(self):
-        super().__init__()
         pass
 
-    def read_as_wav(self, file_path: str) -> AudioWAV:
-        """ Read an audio file as a .wav file with normalised audio data in range (-1, 1) of type float32 """
-        
-        audioFileConverter = AudioFileConverter()
-        temp_path = audioFileConverter.convert_to_wav(file_path)
-        
-        sample_rate, audio = wavfile.read(temp_path)
-        dataNumberType = audio.dtype
-        
-        match dataNumberType:
-            case 'float32':
-                audio = audio
-            case 'int32':
-                audio = audio / 2**31
-            case 'int16':
-                audio = audio / 2**15
-            case 'uint8':
-                audio = (audio - 128) / 128
+    @staticmethod
+    def delete_temp_file(file_path: str):
+        """ Delete a temporary file if it ends with 'temp.<extension>' """
+        if re.search(r'temp\.\w+$', file_path):
+            os.remove(file_path)
+
+    @staticmethod
+    def read(file_path: str, return_audio_type: Union[AudioFormat, None] = None) -> Audio:
+        """ Read an audio file from a file path, file_path must include the file extension """
+        if not os.path.exists(file_path):
+            raise FileNotFoundError("File not found")
+
+        match return_audio_type:
+            case AudioFormat.WAV:
+                file_path = AudioFileConverter().convert_to_wav(file_path)
+                audio = AudioWAVFileProcessor().read(file_path)
+                AudioFileHandler.delete_temp_file(file_path)
+                return audio
+            case AudioFormat.MP3:
+                raise ValueError("mp3 format not supported")
             case _:
-                raise ValueError("Data type not supported")
-            
-        audio = audio.astype(np.float32)
-        
-        n_samples, n_channels = audio.shape
-        os.remove(temp_path)
-        
-        audioWAV = AudioWAV(audio=audio, format='wav', sample_rate=sample_rate, n_samples=n_samples, n_channels=n_channels)
-        
-        return audioWAV
-        
-    def write(self, audio: Audio, file_path: str):
+                raise ValueError("File format not supported")
+
+    @staticmethod
+    def write(audio: Audio, file_path: str):
         """ Write an Audio object to a file, file_path must include the file extension """
-        match file_path.split(".")[-1]:
+        match get_extension(file_path):
             case "wav":
-                wavfile.write(file_path, audio.sample_rate, audio.audio)
+                if isinstance(audio, AudioWAV):
+                    AudioWAVFileProcessor().write(audio, file_path)
+                else:
+                    raise ValueError("Wrong audio extension pair")
+            case "mp3":
+                raise ValueError("mp3 format not supported")
             case _:
                 raise ValueError("File format not supported")
