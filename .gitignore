@@ -2,3 +2,4 @@
 /compressedAudio/*
 **/__pycache__/*
 .idea
+.vscode
