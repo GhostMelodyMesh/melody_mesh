@@ -4,7 +4,8 @@ from src.dataTypes.Audio import Audio
 
 
 class AudioWAV(Audio):
-    def __init__(self, n_samples: int, n_channels: int, audio=None, format=None, sample_rate=None):
+    """ AudioWAV.audio property is a np.ndarray of shape (n_channels, n_samples) - 2 dimensional array, [AddTest] """
+    def __init__(self, n_samples: int, n_channels: int, audio: np.ndarray = None, format=None, sample_rate=None):
         super().__init__(audio, format, sample_rate)
         self._n_samples = n_samples
         self._n_channels = n_channels
