@@ -1,9 +1,5 @@
-from compressors.CompressorWAVBaseline import CompressorWAVBaseline
-from src.fileHandlers.AudioFileHandler import AudioFileProcessor
+from src.compressors.CompressorWAVBaseline import CompressorWAVBaseline
 
 
 print("Hello World!")
-# c = CompressorWAVBaseline()
-# c.compress("rawAudio/file0.mp3")
-# fReader = AudioFileHandler()
-# audio = fReader.read_as_wav("rawAudio/file0.mp3")
+# CompressorWAVBaseline().compress("rawAudio/file0.mp3")
