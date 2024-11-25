@@ -1,5 +1,7 @@
+import os
 from abc import ABC, abstractmethod
-import yt_dlp # For now the best solution, maybe there's a better library for this
+from spotdl import Spotdl # It finds songs from the Spotify playlists on Youtube and downloads them
+import yt_dlp # For now the best solution, it works for Youtube and possibly SoundCloud
 from multiprocessing import Pool # For downloading files concurrently
 
 
@@ -32,13 +34,46 @@ class AudioDownloader:
     
     def __init__(self, data_generator: DataGenerator):
         self.data_generator = data_generator
-        
+        # self.spotdl = Spotdl() # For Spotify
+    
+    def folder_exists(self):
+        """Ensure that the AUDIO_FOLDER exists."""
+        if not os.path.exists(self.AUDIO_FOLDER):
+            os.makedirs(self.AUDIO_FOLDER)
+
+    def detect_platform(self, link):
+        """Detects the platform based on the link."""
+        if "youtube" in link or "youtu.be" in link:
+            return "youtube"
+        elif "spotify.com" in link:
+            return "spotify"
+        elif "soundcloud.com" in link:
+            return "soundcloud"
+        else:
+            raise ValueError(f"Unsupported platform: {link}")
+
     def download_audio(self, link):
-        """Download audio from the given link using yt-dlp."""
+        """Download audio from the given link."""
+        platform = self.detect_platform(link)
+
+        try:
+            if platform == "youtube" or platform == "soundcloud":
+                self.download_with_ytdlp(link)
+            elif platform == "spotify":
+                self.download_with_spotdl(link)
+        except Exception as e:
+            print(f"Failed to download {link}: {e}")
+
+    def download_with_ytdlp(self, link):
+        """Downloading audio using the yt-dlp library"""
         ...
-        print(f"Downloading: {link}")
+
+    def download_with_spotdl(self, link):
+        """Download audio using the spotdl library"""
+        ...
 
     def download_files(self, file_path, num_files=None, seed=None, download_all=False):
         """Handle downloading audio files"""
+        self.folder_exists()
         ...
         
