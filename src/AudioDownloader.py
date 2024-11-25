@@ -1,4 +1,5 @@
 import os
+import subprocces
 from abc import ABC, abstractmethod
 from spotdl import Spotdl # It finds songs from the Spotify playlists on Youtube and downloads them
 import yt_dlp # For now the best solution, it works for Youtube and possibly SoundCloud
@@ -66,11 +67,25 @@ class AudioDownloader:
 
     def download_with_ytdlp(self, link):
         """Downloading audio using the yt-dlp library"""
-        ...
+        yt_opts = {
+            "outtmpl": f"./{AUDIO_FOLDER}/%(title)s.%(ext)s",
+            "format": "bestaudio",
+            "postprocessors": [{
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "wav", #which extension should we set as default?
+            }]
+        }
+        try:
+            with yt_dlp.YouTubeDL(yt_opts) as yt_dl:
+                yt_dl.download(link)
+        except DownloadError:
+            printf(f"Failed to download {link}")
+            return
 
     def download_with_spotdl(self, link):
         """Download audio using the spotdl library"""
-        ...
+        ...  
+                
 
     def download_files(self, file_path, num_files=None, seed=None, download_all=False):
         """Handle downloading audio files"""
