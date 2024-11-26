@@ -27,6 +27,10 @@ class AudioFileHandler:
         if not os.path.exists(file_path):
             raise FileNotFoundError("File not found")
 
+        if return_audio_type is None:
+            extension = get_extension(file_path)
+            return_audio_type = AudioFormat.from_str(extension)
+
         match return_audio_type:
             case AudioFormat.WAV:
                 file_path = AudioFileConverter().convert_to_wav(file_path)
