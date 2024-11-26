@@ -1,5 +1,6 @@
 import os
 import subprocces
+import random
 from abc import ABC, abstractmethod
 from spotdl import Spotdl # It finds songs from the Spotify playlists on Youtube and downloads them
 import yt_dlp # For now the best solution, it works for Youtube and possibly SoundCloud
@@ -32,6 +33,7 @@ class AudioDownloader:
     
     NUM_FILES = 10
     AUDIO_FOLDER = "rawAudio"
+    LINKS_PATH = "./audioFilesLinks.txt"
     
     def __init__(self, data_generator: DataGenerator):
         self.data_generator = data_generator
@@ -84,11 +86,23 @@ class AudioDownloader:
 
     def download_with_spotdl(self, link):
         """Download audio using the spotdl library"""
-        ...  
-                
+        ...
 
-    def download_files(self, file_path, num_files=None, seed=None, download_all=False):
+    def download_files(self, file_path=LINKS_PATH, num_files=NUM_FILES, seed=None, download_all=False):
         """Handle downloading audio files"""
         self.folder_exists()
-        ...
+        urls = self.data_generator.get_links(file_path)
+        if not download_all:
+            if seed != None:
+                random.seed(seed)
+            random_indices = [random.randint(0, len(urls)-1) for i in range(num_files)]
+            urls_scraped = []
+            for i in range(num_files):
+                urls_scraped.append(urls[random_indicies[i]]
+            pool.map(self.download_audio, urls_scraped)       
+        else:
+            pool.map(self.download_audio, urls)
+            
+        
+        
         
