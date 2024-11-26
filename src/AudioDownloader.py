@@ -98,7 +98,7 @@ class AudioDownloader:
             random_indices = [random.randint(0, len(urls)-1) for i in range(num_files)]
             urls_scraped = []
             for i in range(num_files):
-                urls_scraped.append(urls[random_indicies[i]]
+                urls_scraped.append(urls[random_indicies[i]])
             pool.map(self.download_audio, urls_scraped)       
         else:
             pool.map(self.download_audio, urls)
