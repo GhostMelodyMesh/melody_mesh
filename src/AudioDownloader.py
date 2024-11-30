@@ -1,13 +1,3 @@
-"""
-Problems:
-1. Need to install ffmpeg and spotdl to make spotdl run properly
-
-Some insights:
-1. I've fixed Pool, now it should work. I've just implemented Pool locally in the func.
-2. Also, we should write types in functions, it's a better practise imo.
-3. I fixed get_links, cuz we need to separate name of the song from the link.
-"""
-
 import os
 import random
 from abc import ABC, abstractmethod
