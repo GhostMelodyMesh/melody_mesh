@@ -1,8 +1,6 @@
 """
-We've got some problems:
-1. Yt_dlp library probably doesn't work - it needs to be checked out
-2. If we want to download songs from Spotify we need to have Spotify API for that,
-and there's probably no way arround it.
+Problems:
+1. Need to install ffmpeg and spotdl to make spotdl run properly
 
 Some insights:
 1. I've fixed Pool, now it should work. I've just implemented Pool locally in the func.
@@ -11,7 +9,6 @@ Some insights:
 """
 
 import os
-import subprocess 
 import random
 from abc import ABC, abstractmethod
 from spotdl import Spotdl # UPDATE: We need client_id and client_secret from Spotify Dev for it to work....and I don't think there's another way
@@ -56,7 +53,6 @@ class AudioDownloader:
         self.num_files = num_files
         self.links_path = links_path
         self.data_generator = data_generator
-        # self.spotdl = Spotdl(client_id=client_id, client_secret=client_secret) # For Spotify
     
     def folder_exists(self):
         """Ensure that the audio_folder exists."""
@@ -97,16 +93,18 @@ class AudioDownloader:
             }]
         }
         try:
-            with yt_dlp.YouTubeDL(yt_opts) as yt_dl:
-                yt_dl.download(link)
+            with yt_dlp.YoutubeDL(yt_opts) as yt_dl:
+                yt_dl.download([link])
         except DownloadError as e:
             print(f"Failed to download {link}")
             return
 
     def download_with_spotdl(self, link: str):
         """Download audio using the spotdl library"""
+        command = (f'spotdl {link} --format wav --output "{{artist}} - {{title}}"')
+        
         try:
-            self.spotdl.download(link)
+            os.system(command)
         except Exception as e:
             print(f"Failed to download {link} with Spotdl: {e}")
 
