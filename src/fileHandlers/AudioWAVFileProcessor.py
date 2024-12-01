@@ -10,10 +10,11 @@ class AudioWAVFileProcessor(FileProcessorAbstract):
         pass
 
     def read(self, file_path: str):
-        """ Read an audio file as a .wav file with normalised audio data in range (-1, 1) of type float32 """
+        """ Read an audio file as a .wav file with normalized audio data in range (-1, 1) of type float32 """
         sample_rate, audio = wavfile.read(file_path)
         data_number_type = audio.dtype
 
+        # Normalize audio data based on its type
         match data_number_type:
             case 'float32':
                 audio = audio
@@ -28,12 +29,13 @@ class AudioWAVFileProcessor(FileProcessorAbstract):
 
         audio = audio.astype(np.float32)
 
+        # Ensure audio data is 2D: mono becomes (n_samples, 1)
+        if audio.ndim == 1:
+            audio = audio[:, np.newaxis]
+
         n_samples, n_channels = audio.shape
 
-        audioWAV = AudioWAV(audio=audio, format='wav', sample_rate=sample_rate, n_samples=n_samples,
-                            n_channels=n_channels)
-
-        return audioWAV
+        return AudioWAV(audio=audio, format='wav', sample_rate=sample_rate, n_samples=n_samples, n_channels=n_channels)
 
     def write(self, audio: AudioWAV, file_path: str):
         """ Write an Audio object to a file, file_path must include the file extension """
