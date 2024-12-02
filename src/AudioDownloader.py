@@ -103,13 +103,14 @@ class AudioDownloader:
         self.folder_exists()
         urls = self.data_generator.get_links(file_path)
 
-        if not download_all: 
+        if not download_all:
             if seed != None:
                 random.seed(seed)
-            random_indices = [random.randint(0, len(urls)-1) for i in range(num_files)]
-            urls_scraped = []
-            for i in range(num_files):
-                urls_scraped.append(urls[random_indices[i]])
+            try:
+                urls_scraped = random.sample(urls, num_files)
+            except ValueError:
+                printf(f"Required number of files to download ({num_files}) is bigger than number of available links: {len(urls)}")
+                urls_scraped = urls
             with Pool() as pool:
                 pool.map(self.download_audio, urls_scraped)  
         else:
