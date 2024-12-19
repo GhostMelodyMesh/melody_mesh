@@ -10,5 +10,42 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app
+      - CHROMA_HOST=${CHROMA_HOST:-chroma-db}
+      - CHROMA_PORT=${CHROMA_PORT:-8000}
     working_dir: /app
     command: python src/main.py
+    networks:
+      - melody-network
+    profiles:
+      - local-db
+      - remote-db
+    depends_on:
+      chroma-db:
+        condition: service_healthy
+
+  chroma-db:
+    image: chromadb/chroma:latest
+    volumes:
+      - chroma-data:/chroma/chroma/
+    environment:
+      - ALLOW_RESET=true
+    ports:
+      - "8000:8000"
+    networks:
+      - melody-network
+    profiles:
+      - local-db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  chroma-data:
+    name: melody-chroma-data
+
+networks:
+  melody-network:
+    driver: bridge

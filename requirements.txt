@@ -1,9 +1,10 @@
 coverage==7.6.1
 pytest==8.3.1
 typing_extensions==4.12.2
-beautifulsoup4==4.10.0
+beautifulsoup4==4.12.3
 numpy==1.23.5
 pydub==0.25.1
 scipy==1.11.4
 spotdl==4.2.10
 yt-dlp==2024.11.18
+chromadb==0.5.23

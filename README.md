@@ -22,3 +22,7 @@ Download Docker Desktop and run it
 
 # Running tests
 pytest
+
+
+# New running
+docker compose --profile local-db run --service-ports --rm melody-app bash
