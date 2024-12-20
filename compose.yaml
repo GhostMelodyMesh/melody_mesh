@@ -1,5 +1,5 @@
 services:
-  melody-app:
+  melody-app-base: &melody-base
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,18 +10,35 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app
-      - CHROMA_HOST=${CHROMA_HOST:-chroma-db}
-      - CHROMA_PORT=${CHROMA_PORT:-8000}
     working_dir: /app
     command: python src/main.py
     networks:
       - melody-network
+
+  melody-app-local:
+    <<: *melody-base
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
+      - CHROMA_HOST=chroma-db
+      - CHROMA_PORT=8000
     profiles:
       - local-db
-      - remote-db
     depends_on:
       chroma-db:
         condition: service_healthy
+
+  melody-app-remote:
+    <<: *melody-base
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
+      - CHROMA_HOST=${CHROMA_HOST}
+      - CHROMA_PORT=${CHROMA_PORT}
+    profiles:
+      - remote-db
 
   chroma-db:
     image: chromadb/chroma:latest

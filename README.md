@@ -24,5 +24,8 @@ Download Docker Desktop and run it
 pytest
 
 
-# New running
-docker compose --profile local-db run --service-ports --rm melody-app bash
+# New local running
+docker compose --profile local-db run --service-ports --rm melody-app-local bash
+
+# New remote running
+docker compose --profile remote-db run --service-ports --rm melody-app-remote bash
