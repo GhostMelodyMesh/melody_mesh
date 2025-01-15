@@ -2,6 +2,20 @@ import sys
 import string
 import time
 import requests
+import pandas as pd
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# Pobierz dane uwierzytelniające z pliku .env
+CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+
+if not CLIENT_ID or not CLIENT_SECRET:
+    print("Brak wymaganych danych SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET lub SPOTIFY_PLAYLIST_ID w pliku .env.")
+    exit()
+
 
 def update_progress_bar(current, total, bar_length=40):
     progress = current / total
@@ -51,8 +65,37 @@ def fetch_tracks_via_search(token, n=10000):
         print("Błąd podczas wyszukiwania utworów:", str(e))
         return []
 
+def save_to_csv(tracks, filename="spotify_tracks.csv"):
+    if not tracks:
+        print("Brak danych do zapisania!")
+        return
+
+    try:
+        df = pd.DataFrame(tracks)
+        df.to_csv(filename, index=False, encoding="utf-8")
+        print(f"Dane zapisane do pliku: {filename}")
+    except Exception as e:
+        print("Błąd podczas zapisywania danych do pliku CSV:", str(e))
+
+
+
+def get_access_token(client_id, client_secret):
+    try:
+        url = "https://accounts.spotify.com/api/token"
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        data = {"grant_type": "client_credentials"}
+
+        response = requests.post(url, headers=headers, data=data, auth=(client_id, client_secret))
+        response.raise_for_status()
+
+        token_data = response.json()
+        return token_data.get("access_token")
+    except Exception as e:
+        print("Błąd podczas uzyskiwania tokenu dostępu:", str(e))
+        exit()
 
 number_of_tracks = 1000
+access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
 tracks = fetch_tracks_via_search(access_token, number_of_tracks)
 
 save_to_csv(tracks, filename="spotify_random_tracks.csv")
