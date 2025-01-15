@@ -7,3 +7,6 @@ pydub==0.25.1
 scipy==1.11.4
 spotdl==4.2.10
 yt-dlp==2024.11.18
+requests==2.31.0
+python-dotenv==0.21.1
+pandas==2.2.3
